@@ -1,4 +1,4 @@
-import { Pool, Client } from 'pg';
+import { Pool } from 'pg';
 import 'dotenv/config';
 
 const { CONNECTION_STRING } = process.env;
