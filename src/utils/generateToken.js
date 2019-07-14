@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const secret = process.env.SECRET;
+const secret = process.env.SECRET_KEY;
 
-const generateToken = id => jwt.sign({ id }, secret, { expiresIn: '1 day' });
+const generateToken = (id, email) => jwt.sign({ id, email }, secret, { expiresIn: '1 day' });
 
 export default generateToken;
