@@ -1,9 +1,10 @@
 /* eslint-disable class-methods-use-this */
+/* eslint-disable consistent-return */
 import Joi from '@hapi/joi';
 // import query from '../db';
 import { Pool } from 'pg';
 import 'dotenv/config';
-import { hashPassword } from '../utils/encrypt';
+import { hashPassword, checkPassword } from '../utils/encrypt';
 import generateToken from '../utils/generateToken';
 
 const { DATABASE_URL } = process.env;
@@ -12,9 +13,9 @@ class AuthController {
   async signUp(req, res) {
     const data = req.body;
     const schema = Joi.object().keys({
-      first_name: Joi.string().required(),
-      last_name: Joi.string().required(),
-      email: Joi.string().email().required(),
+      first_name: Joi.string().required().max(30),
+      last_name: Joi.string().required().max(30),
+      email: Joi.string().email().required().max(50),
       password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/).required(),
       is_admin: Joi.boolean(),
     });
@@ -40,6 +41,43 @@ class AuthController {
         email: result.rows[0].email,
       };
       res.status(201).send({ status: 'success', data: returnData });
+    } catch (err) {
+      return res.status(400).json({ status: 'fail', error: err });
+    }
+  }
+
+  async signIn(req, res) {
+    const data = req.body;
+    const schema = Joi.object().keys({
+      email: Joi.string().email().required().max(50),
+      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/).required(),
+    });
+    const { error } = Joi.validate(data, schema);
+    if (error) {
+      return res.status(422).send({
+        status: 'fail',
+        error: error.message,
+      });
+    } try {
+      const pool = new Pool({ connectionString: DATABASE_URL });
+      const { rows } = await pool.query('SELECT * FROM users WHERE email = $1;', [req.body.email]);
+      if (!rows[0]) {
+        return res.status(404).json({ status: 'fail', error: 'User does not exist!' });
+      // eslint-disable-next-line no-else-return
+      } else {
+        const userHash = await checkPassword(req.body.password, rows[0].password);
+        if (userHash) {
+          const returnData = {
+            user_id: rows[0].id,
+            is_admin: rows[0].is_admin,
+            token: await generateToken(rows[0].id, rows[0].email),
+            email: rows[0].email,
+          };
+          res.status(200).send({ status: 'success', data: returnData });
+        } else {
+          return res.status(401).json({ status: 'fail', error: 'Please check your user details' });
+        }
+      }
     } catch (err) {
       return res.status(400).json({ status: 'fail', error: err });
     }
