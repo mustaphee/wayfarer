@@ -29,6 +29,7 @@
     "@babel/node": "^7.5.0",
     "@babel/preset-env": "^7.5.4",
     "@babel/register": "^7.4.4",
+    "babel-polyfill": "^6.26.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "coveralls": "^3.0.5",

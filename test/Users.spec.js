@@ -1,8 +1,7 @@
 /* eslint-disable no-undef */
-import chai from 'chai';
-import chaiHttp from 'chai-http';
-import uuid from 'uuidv4';
-import app from '../server';
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const app = require('../server');
 
 // Configure chai
 chai.use(chaiHttp);
