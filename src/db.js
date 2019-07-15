@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import { Pool } from 'pg';
 import 'dotenv/config';
 import { hashPassword } from './utils/encrypt';
@@ -25,6 +26,7 @@ const userTableSQL = `
   `;
 const adminData = ['Yusuff', 'Mustapha', 'officialwebdev@gmail.com', true];
 const createUserTable = async () => {
+  pool.query('DROP TABLE IF EXISTS users');
   pool.query(userTableSQL)
     .then(async () => {
       // Check if admin exists

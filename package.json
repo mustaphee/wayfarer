@@ -20,9 +20,9 @@
     "pg": "^7.11.0"
   },
   "scripts": {
-    "db": "nodemon --exec babel-node src/db createUserTable",
+    "db": "node --require @babel/register src/db createUserTable --exit",
     "start": "nodemon --exec babel-node server.js",
-    "test": "nyc --reporter=text mocha --timeout 10000 -c test --require @babel/register --exit",
+    "test": "npm run db && nyc --reporter=text mocha --timeout 10000 -c test --require @babel/register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "devDependencies": {
