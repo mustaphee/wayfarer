@@ -26,8 +26,8 @@ const userTableSQL = `
   `;
 const adminData = ['Yusuff', 'Mustapha', 'officialwebdev@gmail.com', true];
 const createUserTable = async () => {
-  pool.query('DROP TABLE IF EXISTS users');
-  pool.query(userTableSQL)
+  await pool.query('DROP TABLE IF EXISTS users');
+  await pool.query(userTableSQL)
     .then(async () => {
       // Check if admin exists
       const { rows } = await pool.query('SELECT * FROM users WHERE email = $1;', ['officialwebdev@gmail.com']);
