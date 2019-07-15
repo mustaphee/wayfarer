@@ -13,6 +13,18 @@ pool.on('connect', () => {
   console.log('connected to the db');
 });
 
+const tripTableSQL = `
+  CREATE TABLE IF NOT EXISTS trips (
+    id SERIAL PRIMARY KEY,
+    bus_id INTEGER NOT NULL,
+    origin VARCHAR(150) NOT NULL,
+    destination VARCHAR(150) NOT NULL,
+    trip_date TEXT NOT NULL,
+    fare NUMERIC NOT NULL, 
+    status VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
 const userTableSQL = `
   CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -24,6 +36,18 @@ const userTableSQL = `
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
+
+const createTripTable = async () => {
+  await pool.query('DROP TABLE IF EXISTS trips');
+  await pool.query(tripTableSQL)
+    .then(async () => {
+      // Create table now
+      console.log('Trip Table created successfully');
+    })
+    .catch((error) => { throw error; });
+  // await pool.end();
+};
+
 const adminData = ['Yusuff', 'Mustapha', 'officialwebdev@gmail.com', true];
 const createUserTable = async () => {
   await pool.query('DROP TABLE IF EXISTS users');
@@ -38,12 +62,17 @@ const createUserTable = async () => {
           .then(() => console.log('Admin created successfully'))
           .catch((error) => { throw error; });
       } else { console.log('Admin already exists'); }
-      await pool.end();
+      // await pool.end();
     }).catch((err) => { throw err; });
+};
+
+const createAllTables = async () => {
+  await createUserTable();
+  await createTripTable();
 };
 
 module.exports = {
   query: (text, params) => pool.query(text, params),
-  createUserTable,
+  createAllTables,
 };
 require('make-runnable');

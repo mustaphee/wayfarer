@@ -34,11 +34,12 @@ class AuthController {
       if (!value.is_admin) value.is_admin = false;
       const con = [value.first_name, value.last_name, value.email, value.password, value.is_admin];
       const result = await pool.query('INSERT INTO users(first_name, last_name, email, password, is_admin) VALUES($1,$2,$3,$4,$5) RETURNING *', con);
+      const user = result.rows[0];
       const returnData = {
-        user_id: result.rows[0].id,
-        is_admin: result.rows[0].is_admin,
-        token: await generateToken(result.rows[0].id, result.rows[0].email),
-        email: result.rows[0].email,
+        user_id: user.id,
+        is_admin: user.is_admin,
+        token: await generateToken(user.id, user.is_admin, user.email),
+        email: user.email,
       };
       res.status(201).send({ status: 'success', data: returnData });
     } catch (err) {
@@ -70,7 +71,7 @@ class AuthController {
           const returnData = {
             user_id: rows[0].id,
             is_admin: rows[0].is_admin,
-            token: await generateToken(rows[0].id, rows[0].email),
+            token: await generateToken(rows[0].id, rows[0].is_admin, rows[0].email),
             email: rows[0].email,
           };
           res.status(200).send({ status: 'success', data: returnData });
