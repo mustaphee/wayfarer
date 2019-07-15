@@ -20,11 +20,9 @@
     "pg": "^7.11.0"
   },
   "scripts": {
-    "unit-test": "nodemon --exec babel-node mocha 'test/**spec.js'",
     "db": "nodemon --exec babel-node src/db createUserTable",
     "start": "nodemon --exec babel-node server.js",
-    "teste": "nyc --reporter=text mocha --timeout 10000 -c test --require @babel/register --exit",
-    "test": "nyc --require @babel/register mocha 'test/**spec.js' --exit",
+    "test": "nyc --reporter=text mocha --timeout 10000 -c test --require @babel/register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "devDependencies": {
