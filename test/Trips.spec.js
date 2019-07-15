@@ -20,10 +20,27 @@ describe('Trips', () => {
           bus_id: 3,
           origin: 'Tanke, Ilorin',
           destination: 'Gaa Odota, Ilorin',
-          trip_date: new Date(),
+          trip_date: new Date().toISOString,
           fare: 270.5,
           status: 'active',
         });
+      expect(res.status).to.equal(201);
+      // eslint-disable-next-line no-unused-expressions
+      expect(res.body).should.have.property('status');
+      expect(res.body.data).should.be.an('object');
+      expect(res.body.status).to.equal('success');
+      expect(res.body.data.fare).to.equal(270.5);
+      expect(res.body.data.destiantion).to.equal('Gaa Odota, Ilorin');
+      expect(res.body.data.origin).to.equal('Tanke, Ilorin');
+    });
+  });
+  describe('GET /trips', () => {
+    // Test to register a user
+    it('should create a user account', async () => {
+      const res = await chai.request(app)
+        .get('/api/v1/trips')
+        .set('Content-Type', 'application/json')
+        .set('token', 'edrweasasddasdfd');
       expect(res.status).to.equal(201);
       // eslint-disable-next-line no-unused-expressions
       expect(res.body).should.have.property('status');
