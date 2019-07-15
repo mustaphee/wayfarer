@@ -62,7 +62,7 @@ class AuthController {
       const pool = new Pool({ connectionString: DATABASE_URL });
       const { rows } = await pool.query('SELECT * FROM users WHERE email = $1;', [req.body.email]);
       if (!rows[0]) {
-        return res.status(404).json({ status: 'error', error: 'User does not exist!' });
+        return res.status(200).json({ status: 'error', error: 'User does not exist!' });
       // eslint-disable-next-line no-else-return
       } else {
         const userHash = await checkPassword(req.body.password, rows[0].password);
