@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import { Pool } from 'pg';
 import 'dotenv/config';
 import { hashPassword } from './utils/encrypt';
@@ -15,7 +16,7 @@ pool.on('connect', () => {
 const userTableSQL = `
   CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(30) NOT NULL UNIQUE,
+    email VARCHAR(50) NOT NULL UNIQUE,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     is_admin BOOL  DEFAULT 'f' NOT NULL,
@@ -25,6 +26,7 @@ const userTableSQL = `
   `;
 const adminData = ['Yusuff', 'Mustapha', 'officialwebdev@gmail.com', true];
 const createUserTable = async () => {
+  pool.query('DROP TABLE IF EXISTS users');
   pool.query(userTableSQL)
     .then(async () => {
       // Check if admin exists

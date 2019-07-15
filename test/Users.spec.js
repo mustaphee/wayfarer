@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
-import chai from 'chai';
+import '@babel/polyfill';
+import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import uuid from 'uuidv4';
 import app from '../server';
 
 // Configure chai
@@ -10,88 +10,67 @@ chai.should();
 
 
 describe('Users', () => {
-  describe('POST /auth/signup', () => {
+  describe('POST /auth/signup/', () => {
     // Test to register a user
-    it('should create a user account', (done) => {
-      chai.request(app)
-        .post('/auth/signup')
+    it('should create a user account', async () => {
+      const res1 = await chai.request(app)
+        .post('/api/v1/auth/signup/')
         .set('Content-Type', 'application/json')
         .send({
-          id: uuid(),
           first_name: 'Rita',
           last_name: 'Achebe',
-          email: 'ritaa@testingdev.com',
+          email: 'ritfog@testingdevs.com',
           password: 'admin',
-          is_admin: false,
-        })
-        .end((err, res) => {
-          res.should.have.status(201);
-          // eslint-disable-next-line no-unused-expressions
-          res.should.be.json;
-          res.body.should.be.a('object');
-          res.body.should.have.property('status');
-          res.body.should.have.property('data');
-          res.body.data.should.be.a('object');
-          res.body.status.should.equal('success');
-          res.body.data.is_admin.to.equal(false);
-          res.body.user.data.email.to.equal('ritaa@testingdev.com');
-          res.body.not.to.have.property('password');
-          done();
         });
-    });
-    describe('POST /auth/signup', () => {
-      // Test to fail at registering user
-      it('should create a user account', (done) => {
-        chai.request(app)
-          .post('/auth/signup')
-          .set('Content-Type', 'application/json')
-          .send({
-            id: uuid(),
-            first_name: 'Rita',
-            last_name: 'Achebe',
-            email: '',
-            password: 'admin',
-            is_admin: false,
-          })
-          .end((err, res) => {
-            res.should.have.status(422);
-            // eslint-disable-next-line no-unused-expressions
-            err.should.be.json;
-            err.body.should.be.a('object');
-            err.body.should.have.property('status');
-            err.body.should.have.property('error');
-            res.body.data.should.be.a('undefined');
-            err.body.status.should.equal('error');
-            done();
-          });
-      });
+      expect(res1.status).to.equal(201);
+      // eslint-disable-next-line no-unused-expressions
+      expect(res1.body).should.have.property('status');
+      expect(res1.body.data).should.be.an('object');
+      expect(res1.body.status).to.equal('success');
+      expect(res1.body.data.is_admin).to.equal(false);
+      expect(res1.body.data.email).to.equal('ritfog@testingdevs.com');
+      expect(res1.body.data).not.to.have.property('password');
     });
   });
   describe('POST /auth/signup', () => {
     // Test to fail at registering user
-    it('should not create a user account', (done) => {
-      chai.request(app)
-        .post('/auth/signup')
+    it('should not create a user account', async () => {
+      const res2 = await chai.request(app)
+        .post('/api/v1/auth/signup/')
         .set('Content-Type', 'application/json')
         .send({
-          id: uuid(),
           first_name: 'Rita',
           last_name: 'Achebe',
-          email: 'ritaa@testingdev.com',
-          password: '',
-          is_admin: false,
-        })
-        .end((err, res) => {
-          res.should.have.status(422);
-          // eslint-disable-next-line no-unused-expressions
-          err.should.be.json;
-          err.body.should.be.a('object');
-          err.body.should.have.property('status');
-          err.body.should.have.property('error');
-          res.body.data.should.be.a('undefined');
-          err.body.status.should.equal('error');
-          done();
+          email: '',
+          password: 'adadsd',
         });
+      expect(res2.status).to.equal(422);
+      // eslint-disable-next-line no-unused-expressions
+      expect(res2.body).should.be.an('object');
+      expect(res2.body).should.have.property('status');
+      expect(res2.body.status).to.equal('error');
+      expect(res2.body).not.to.have.property('data');
+    });
+  });
+  describe('POST /auth/signup', () => {
+    // Test to check user already exists
+    // I will test using the default admin email
+    it('should not create a user account', async () => {
+      const res3 = await chai.request(app)
+        .post('/api/v1/auth/signup/')
+        .set('Content-Type', 'application/json')
+        .send({
+          first_name: 'Rita',
+          last_name: 'Achebe',
+          email: 'officialwebdev@gmail.com',
+          password: 'adadsd',
+        });
+      expect(res3.status).to.equal(400);
+      // eslint-disable-next-line no-unused-expressions
+      expect(res3.body).should.be.an('object');
+      expect(res3.body).should.have.property('status');
+      expect(res3.body.status).to.equal('error');
+      expect(res3.body).not.to.have.property('data');
     });
   });
 });
