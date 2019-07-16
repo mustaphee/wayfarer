@@ -16,6 +16,9 @@ router.post('/auth/signup', AuthController.signUp)
   // Booking routes
   .get('/bookings', isUserAuthenticated, BookingController.getBookings)
   .post('/bookings', isUserAuthenticated, BookingController.bookASeat)
-  .delete('/bookings/:bookingId', isUserAuthenticated, BookingController.deleteBooking);
+  .delete('/bookings/:bookingId', isUserAuthenticated, BookingController.deleteBooking)
+  // filter based on destination or origin
+  .get('/trips/:destination', isUserAuthenticated, TripController.filterTripsByDestination)
+  .get('/trips/:origin', isUserAuthenticated, TripController.filterTripsByOrigin);
 
 module.exports = router;

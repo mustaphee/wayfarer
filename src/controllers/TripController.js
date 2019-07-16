@@ -89,8 +89,35 @@ class TripController {
       if (!rows[0]) return res.status(200).json({ status: 'error', error: 'Trip doesnt exists!' });
       await query('UPDATE trips SET status = $1 WHERE id = $2 ', ['cancelled', value.trip_id]);
       res.status(201).send({ status: 'success', data: { message: 'Trip cancelled successfully' } });
-    } 
-    catch (err) {
+    } catch (err) {
+      return res.status(400).json({ status: 'error', error: err });
+    }
+  }
+
+  async filterTripsByDestination(req, res) {
+    const data = { token: req.headers.token, destination: req.params.destination };
+    const schema = Joi.object().keys({ token: Joi.string(), destination: Joi.string().required() });
+    const { error } = Joi.validate(data, schema);
+    if (error) return res.status(422).send({ status: 'error', error: error.message });
+    try {
+      const { rows } = await query('SELECT * from trips WHERE destination is $1', ['data.destination']);
+      if (!rows[0]) return res.status(200).json({ status: 'success', data: 'You have no booking for this destination' });
+      res.status(200).send({ status: 'success', data: rows });
+    } catch (err) {
+      return res.status(400).json({ status: 'error', error: err });
+    }
+  }
+
+  async filterTripsByOrigin(req, res) {
+    const data = { token: req.headers.token, origin: req.params.origin };
+    const schema = Joi.object().keys({ token: Joi.string(), origin: Joi.string().required() });
+    const { error } = Joi.validate(data, schema);
+    if (error) return res.status(422).send({ status: 'error', error: error.message });
+    try {
+      const { rows } = await query('SELECT * from trips WHERE origin is $1', ['data.destination']);
+      if (!rows[0]) return res.status(200).json({ status: 'success', data: 'You have no booking for this origin' });
+      res.status(200).send({ status: 'success', data: rows });
+    } catch (err) {
       return res.status(400).json({ status: 'error', error: err });
     }
   }
