@@ -17,7 +17,8 @@
     "make-runnable": "^1.3.6",
     "mocha-lcov-reporter": "^1.3.0",
     "morgan": "^1.9.1",
-    "pg": "^7.11.0"
+    "pg": "^7.11.0",
+    "swagger-ui-express": "^4.0.7"
   },
   "scripts": {
     "db": "node --require @babel/register src/db createAllTables --exit",
