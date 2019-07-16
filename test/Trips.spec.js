@@ -22,7 +22,7 @@ describe('Trips', () => {
     /* eslint-disable prefer-destructuring */
     token = await body.data.token;
 
-    await chai.request(app)
+    const resb = await chai.request(app)
       .post('/api/v1/trips')
       .set('Content-Type', 'application/json')
       .set('token', token)
@@ -34,7 +34,7 @@ describe('Trips', () => {
         fare: 4205.34,
         status: 'active',
       });
-      tripId = await body.data.id
+    tripId = await (resb.body.data.trip_id).toString();
   });
   describe('POST /trips/', () => {
     // Test to create a trip
@@ -111,16 +111,15 @@ describe('Trips', () => {
       expect(res.body.error).to.equal('Failed to authenticate token.');
     });
   });
-  describe('PATCH /trips/tripId', () => {
+  describe('PATCH /trips/:tripId', () => {
     // Test to cancel trip
-    it('should NOt get all trips', async () => {
+    it('should cancel trip', async () => {
       const res = await chai.request(app)
-        .get('/api/v1/trips/'+tripId)
+        .patch('/api/v1/trips/'+ tripId)
         .set('Content-Type', 'application/json')
         .set('token', token);
       expect(res.status).to.equal(201);
       expect(res.body).should.have.property('status');
-      expect(res.body.data).should.have.property('message');
       expect(res.body.status).to.equal('success');
       expect(res.body.data.message).to.equal('Trip cancelled successfully');
     });
@@ -128,9 +127,9 @@ describe('Trips', () => {
 
   describe('PATCH /trips/:tripId', () => {
     // Test to NOT cancel trips
-    it('should NOt get all trips', async () => {
+    it('should NOt cancel trip', async () => {
       const res = await chai.request(app)
-        .get('/api/v1/trips/'+tripId)
+        .patch('/api/v1/trips/'+ tripId)
         .set('Content-Type', 'application/json')
         .set('token', 'dsfdfjfgvdfgdf');
       expect(res.status).to.equal(401);
@@ -142,12 +141,12 @@ describe('Trips', () => {
 
   describe('PATCH /trips/:tripId', () => {
     // Test to NOT get all trips
-    it('should NOt get all trips', async () => {
+    it('should NOt cancel trips', async () => {
       const res = await chai.request(app)
-        .get('/api/v1/trips/'+0)
+        .patch('/api/v1/trips/' + '0')
         .set('Content-Type', 'application/json')
         .set('token', token);
-      expect(res.status).to.equal(404);
+      expect(res.status).to.equal(200);
       expect(res.body).should.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body.error).to.equal('Trip doesnt exists!');

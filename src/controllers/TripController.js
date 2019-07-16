@@ -60,9 +60,35 @@ class TripController {
     }
     try {
       const { rows } = await query('SELECT * from trips');
-      if (!rows) return res.status(200).json({ status: 'success', data: [] });
+      if (!rows[0]) return res.status(200).json({ status: 'success', data: [] });
       res.status(200).send({ status: 'success', data: rows });
     } catch (err) {
+      return res.status(400).json({ status: 'error', error: err });
+    }
+  }
+
+  async cancelTrip(req, res) {
+    const data = { trip_id: parseInt(req.params.tripId) };
+    const schema = Joi.object().keys({
+      token: Joi.string(),
+      user_id: Joi.number(),
+      is_admin: Joi.boolean(),
+      trip_id: Joi.number().integer().required(),
+    });
+    const { error, value } = Joi.validate(data, schema);
+    if (error) {
+      return res.status(422).send({
+        status: 'error',
+        error: error.message,
+      });
+    }
+    try {
+      const { rows } = await query('SELECT * FROM trips WHERE id = $1;', [value.trip_id]);
+      if (!rows[0]) return res.status(200).json({ status: 'error', error: 'Trip doesnt exists!' });
+      await query('UPDATE trips SET status = $1 WHERE id = $2 ', ['cancelled', value.trip_id]);
+      res.status(201).send({ status: 'success', data: { message: 'Trip cancelled successfully' } });
+    } 
+    catch (err) {
       return res.status(400).json({ status: 'error', error: err });
     }
   }
