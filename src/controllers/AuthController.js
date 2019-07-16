@@ -16,7 +16,7 @@ class AuthController {
       first_name: Joi.string().required().max(30),
       last_name: Joi.string().required().max(30),
       email: Joi.string().email().required().max(50),
-      password: Joi.string().regex(/^[a-zA-Z0-9]{5,30}$/).required(),
+      password: Joi.string().required(),
       is_admin: Joi.boolean(),
     });
     const { error, value } = Joi.validate(data, schema);
