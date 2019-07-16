@@ -6,6 +6,9 @@ import { query } from '../db';
 
 class TripController {
   async createATrip(req, res) {
+    console.log('<<<<<<<============CREATE A TRIP ENDPOINT========>>>>>>>>>');
+    console.log(req.body);
+    console.log(req.token);
     const data = req.body;
     const schema = Joi.object().keys({
       bus_id: Joi.number().integer().required(),
@@ -45,6 +48,9 @@ class TripController {
   }
 
   async getAllTrips(req, res) {
+    console.log('<<<<<<<============GET ALL TRIP ENDPOINT========>>>>>>>>>');
+    console.log(req.body);
+    console.log(req.token);
     const data = req.body;
     const schema = Joi.object().keys({
       token: Joi.string(),
@@ -68,6 +74,9 @@ class TripController {
   }
 
   async cancelTrip(req, res) {
+    console.log('<<<<<<<============CANCEL TRIP ENDPOINT========>>>>>>>>>');
+    console.log(req.body);
+    console.log(req.token);
     const data = { trip_id: parseInt(req.params.tripId) };
     const schema = Joi.object().keys({
       token: Joi.string(),
