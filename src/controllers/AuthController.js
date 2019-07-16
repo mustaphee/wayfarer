@@ -1,13 +1,10 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable consistent-return */
 import Joi from '@hapi/joi';
-// import query from '../db';
-import { Pool } from 'pg';
 import 'dotenv/config';
 import { hashPassword, checkPassword } from '../utils/encrypt';
 import generateToken from '../utils/generateToken';
-
-const { DATABASE_URL } = process.env;
+import { query } from '../db';
 
 class AuthController {
   async signUp(req, res) {
@@ -27,13 +24,12 @@ class AuthController {
       });
     }
     try {
-      const pool = new Pool({ connectionString: DATABASE_URL });
-      const { rows } = await pool.query('SELECT * FROM users WHERE email = $1;', [req.body.email]);
+      const { rows } = await query('SELECT * FROM users WHERE email = $1;', [req.body.email]);
       if (rows[0]) return res.status(400).json({ status: 'error', error: 'User already exists' });
       value.password = await hashPassword(req.body.password);
       if (!value.is_admin) value.is_admin = false;
       const con = [value.first_name, value.last_name, value.email, value.password, value.is_admin];
-      const result = await pool.query('INSERT INTO users(first_name, last_name, email, password, is_admin) VALUES($1,$2,$3,$4,$5) RETURNING *', con);
+      const result = await query('INSERT INTO users(first_name, last_name, email, password, is_admin) VALUES($1,$2,$3,$4,$5) RETURNING *', con);
       const user = result.rows[0];
       const returnData = {
         user_id: user.id,
@@ -60,8 +56,7 @@ class AuthController {
         error: error.message,
       });
     } try {
-      const pool = new Pool({ connectionString: DATABASE_URL });
-      const { rows } = await pool.query('SELECT * FROM users WHERE email = $1;', [req.body.email]);
+      const { rows } = await query('SELECT * FROM users WHERE email = $1;', [req.body.email]);
       if (!rows[0]) {
         return res.status(200).json({ status: 'error', error: 'User does not exist!' });
       // eslint-disable-next-line no-else-return
