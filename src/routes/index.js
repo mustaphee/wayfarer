@@ -10,6 +10,7 @@ router.post('/auth/signup', AuthController.signUp)
   .post('/auth/signin', AuthController.signIn)
   // Trips routes
   .post('/trips', isAdminAuthenticated, TripController.createATrip)
-  .get('/trips', isUserAuthenticated, TripController.getAllTrips);
+  .get('/trips', isUserAuthenticated, TripController.getAllTrips)
+  .patch('/trips/:tripId', isAdminAuthenticated, TripController.cancelTrip);
 
 module.exports = router;
