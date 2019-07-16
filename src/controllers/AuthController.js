@@ -37,7 +37,8 @@ class AuthController {
       const returnData = {
         user_id: user.id,
         is_admin: user.is_admin,
-        token: await generateToken(user.id, user.is_admin, user.email),
+        token: await generateToken(user.id, user.is_admin,
+          { email: user.email, first_name: user.first_name, last_name: user.last_name }),
         email: user.email,
       };
       res.status(201).send({ status: 'success', data: returnData });
@@ -72,7 +73,8 @@ class AuthController {
           const returnData = {
             user_id: rows[0].id,
             is_admin: rows[0].is_admin,
-            token: await generateToken(rows[0].id, rows[0].is_admin, rows[0].email),
+            token: await generateToken(rows[0].id, rows[0].is_admin,
+              { email: rows[0].email, first_name: rows[0].first_name, last_name: rows[0].last_name }),
             email: rows[0].email,
           };
           res.status(200).send({ status: 'success', data: returnData });
