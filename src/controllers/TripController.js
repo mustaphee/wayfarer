@@ -35,6 +35,7 @@ class TripController {
         value.trip_date, value.fare, value.status];
       const result = await query('INSERT INTO trips(bus_id, origin, destination, trip_date, fare, status) VALUES($1,$2,$3,$4,$5, $6) RETURNING *', con);
       const returnData = {
+        id: result.rows[0].id,
         trip_id: result.rows[0].id,
         bus_id: result.rows[0].bus_id,
         origin: result.rows[0].origin,

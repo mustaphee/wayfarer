@@ -16,5 +16,6 @@ router.post('/auth/signup', AuthController.signUp)
   // Booking routes
   .get('/bookings', isUserAuthenticated, BookingController.getBookings)
   .post('/bookings', isUserAuthenticated, BookingController.bookASeat)
+  .delete('/bookings/:bookingId', isUserAuthenticated, BookingController.deleteBooking);
 
 module.exports = router;

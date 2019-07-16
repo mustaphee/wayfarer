@@ -1,15 +1,13 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable consistent-return */
 /* eslint-disable no-else-return */
+/* eslint-disable import/named */
 import Joi from '@hapi/joi';
 import 'dotenv/config';
 import { query } from '../db';
 
 class BookingController {
   async bookASeat(req, res) {
-    console.log('<<<<<<<============BOOK A SEAT ENDPOINT========>>>>>>>>>');
-    console.log(req.body);
-    console.log(req.token);
     const data = req.body;
     const schema = Joi.object().keys({
       Authorization: Joi.string(),
@@ -30,6 +28,7 @@ class BookingController {
         details.first_name, details.last_name, details.email, rows[0].trip_date];
       const result = await query('INSERT INTO bookings(user_id, trip_id, bus_id, first_name, last_name, email, trip_date) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *', con);
       const returnData = {
+        id: result.rows[0].id,
         booking_id: result.rows[0].id,
         user_id: result.rows[0].user_id,
         trip_id: result.rows[0].trip_id,
@@ -47,9 +46,6 @@ class BookingController {
   }
 
   async getBookings(req, res) {
-    console.log('<<<<<<<============GET ALL BOOKING ENDPOINT========>>>>>>>>>');
-    console.log(req.body);
-    console.log(req.token);
     const data = req.body;
     const schema = Joi.object().keys({
       token: Joi.string(),
@@ -69,10 +65,34 @@ class BookingController {
         const { rows } = await query('SELECT * from bookings');
         return res.status(200).send({ status: 'success', data: rows });
       } else {
-        const { rows } = await query('SELECT * from bookings WHERE id = $1', [req.decoded.id]);
+        const { rows } = await query('SELECT * from bookings WHERE user_id = $1', [req.decoded.id]);
         if (!rows[0]) return res.status(200).json({ status: 'success', data: [] });
         res.status(200).send({ status: 'success', data: rows });
       }
+    } catch (err) {
+      return res.status(400).json({ status: 'error', error: err });
+    }
+  }
+
+  async deleteBooking(req, res) {
+    const data = req.body;
+    const schema = Joi.object().keys({
+      token: Joi.string(),
+      Authorization: Joi.string(),
+      user_id: Joi.number(),
+      is_admin: Joi.boolean(),
+    });
+    const { error } = Joi.validate(data, schema);
+    if (error) {
+      return res.status(422).send({
+        status: 'error',
+        error: error.message,
+      });
+    }
+    try {
+      const { rowCount } = await query('DELETE from bookings WHERE id = $1 AND user_id = $2', [req.params.bookingId, req.decoded.id]);
+      if (rowCount !== 1) return res.status(403).json({ status: 'error', error: 'The booking you\'re trying to delete does not exist or you\'re not allowed to delete it' });
+      res.status(200).send({ status: 'success', data: { message: 'Booking deleted successfully' } });
     } catch (err) {
       return res.status(400).json({ status: 'error', error: err });
     }
