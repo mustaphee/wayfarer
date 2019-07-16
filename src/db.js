@@ -36,6 +36,22 @@ const userTableSQL = `
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
+const busTableSQL = `
+  CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    number_plate VARCHAR(15) NOT NULL UNIQUE,
+    manufacturer VARCHAR(30) NOT NULL,
+    year VARCHAR(5) NOT NULL,
+    MODEL VARCHAR(15),
+    CAPACITY INTEGER NOT NULL,
+    )
+  `;
+
+const buses = {
+  0: ['NRK-54AZL', 'Toyota', '2016', 'Hiace', 18],
+  1: ['LRN-54KKL', 'Honda', '2016', 'Coaster', 28],
+  2: ['KJA-67BLK', 'Toyota', '2016', 'Hiace', 22],
+};
 
 const createTripTable = async () => {
   await pool.query('DROP TABLE IF EXISTS trips');
@@ -43,6 +59,21 @@ const createTripTable = async () => {
     .then(async () => {
       // Create table now
       console.log('Trip Table created successfully');
+    })
+    .catch((error) => { throw error; });
+  // await pool.end();
+};
+const createBusTable = async () => {
+  await pool.query('DROP TABLE IF EXISTS buses');
+  await pool.query(busTableSQL)
+    .then(async () => {
+      // Create table now
+      console.log('Bus Table created successfully');
+      buses.forEach(element => {
+        pool.query('INSERT INTO buses(number_plate, manufacturer, year, model, capacity)VALUES($1,$2,$3,$4,$5)', Object.values(element))
+          .then(() => console.log('All buses uploaded successfully!'));
+          .catch((error) => { throw error; });
+      });
     })
     .catch((error) => { throw error; });
   // await pool.end();
@@ -69,6 +100,7 @@ const createUserTable = async () => {
 const createAllTables = async () => {
   await createUserTable();
   await createTripTable();
+  await createBusTable();
 };
 
 module.exports = {

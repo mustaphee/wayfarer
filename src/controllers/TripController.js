@@ -11,9 +11,11 @@ class TripController {
     console.log(req.token);
     const data = req.body;
     const schema = Joi.object().keys({
+      Authorization: Joi.string(),
+      token: Joi.string(),
       bus_id: Joi.number().integer().required(),
       origin: Joi.string().required().max(150),
-      trip_date: Joi.date(),
+      trip_date: Joi.string(),
       destination: Joi.string().required().max(150),
       fare: Joi.number().required(),
       status: Joi.string().max(10),
@@ -54,8 +56,9 @@ class TripController {
     const data = req.body;
     const schema = Joi.object().keys({
       token: Joi.string(),
-      user_id: Joi.number(),
-      is_admin: Joi.boolean(),
+      Authorization: Joi.string(),
+      // user_id: Joi.number(),
+      // is_admin: Joi.boolean(),
     });
     const { error } = Joi.validate(data, schema);
     if (error) {
