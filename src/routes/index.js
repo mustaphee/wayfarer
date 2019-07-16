@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import AuthController from '../controllers/AuthController';
 import TripController from '../controllers/TripController';
+import BookingController from '../controllers/BookingController';
 import { isAdminAuthenticated, isUserAuthenticated } from '../middlewares/authenticator';
 
 const router = Router();
@@ -11,6 +12,9 @@ router.post('/auth/signup', AuthController.signUp)
   // Trips routes
   .post('/trips', isAdminAuthenticated, TripController.createATrip)
   .get('/trips', isUserAuthenticated, TripController.getAllTrips)
-  .patch('/trips/:tripId', isAdminAuthenticated, TripController.cancelTrip);
+  .patch('/trips/:tripId', isAdminAuthenticated, TripController.cancelTrip)
+  // Booking routes
+  .get('/bookings', isUserAuthenticated, BookingController.getBookings)
+  .post('/bookings', isUserAuthenticated, BookingController.bookASeat)
 
 module.exports = router;
