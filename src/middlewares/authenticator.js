@@ -7,9 +7,6 @@ import 'dotenv/config';
 const { SECRET_KEY } = process.env;
 
 export const isAdminAuthenticated = (req, res, next) => {
-  console.log('<<<<<<<============AUTHENTICATOR ADMIN========>>>>>>>>>');
-  console.log(req.body);
-  console.log(req.token);
   const token = req.body.token || req.query.token || req.headers.token;
   if (token) {
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
@@ -29,9 +26,6 @@ export const isAdminAuthenticated = (req, res, next) => {
 };
 
 export const isUserAuthenticated = (req, res, next) => {
-  console.log('<<<<<<<============AUTHENTICATOR uSER========>>>>>>>>>');
-  console.log(req.body);
-  console.log(req.token);
   const token = req.body.token || req.query.token || req.headers.token;
   if (token) {
     jwt.verify(token, SECRET_KEY, (err, decoded) => {

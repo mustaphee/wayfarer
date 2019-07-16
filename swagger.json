@@ -1,0 +1,268 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Wayfarer API",
+    "description": "# Introduction\nWayfarer API is a simple app build for travelers?\n\n# Overview\nIt uses NodeJS with PostGreSQL for it's database.\n\n# Authentication\nAll routes, except the authentication routes, (sign in and sign up) are JWT-protected.\n\n# Error Codes\n201: Created\n200: Okay\n400: Bad Request\n401: Unauthorized\n403: Forbidden\n\n# Rate limit\nThere is no rate limitin.",
+    "contact": {}
+  },
+  "host": "localhost:4000",
+  "basePath": "/api/v1/auth",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/signup/": {
+      "post": {
+        "description": "TODO: Add Description",
+        "summary": "Sign Up",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "SignupPost",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SignUpRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/signin": {
+      "post": {
+        "description": "TODO: Add Description",
+        "summary": "Sign In",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "SigninPost",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SignInRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/signup": {
+      "post": {
+        "description": "TODO: Add Description",
+        "summary": "Create a Booking",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "SignupPost5",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SignUpRequest": {
+      "title": "SignUpRequest",
+      "example": {
+        "first_name": "Rita",
+        "last_name": "Achebe",
+        "email": "",
+        "password": "adminer"
+      },
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "first_name",
+        "last_name",
+        "email",
+        "password"
+      ]
+    },
+    "CreateaTripRequest": {
+      "title": "CreateaTripRequest",
+      "example": {
+        "first_name": "Rita",
+        "last_name": "Achebe",
+        "email": "",
+        "password": "adminer"
+      },
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "first_name",
+        "last_name",
+        "email",
+        "password"
+      ]
+    },
+    "GetallTripsRequest": {
+      "title": "GetallTripsRequest",
+      "example": {
+        "first_name": "Rita",
+        "last_name": "Achebe",
+        "email": "",
+        "password": "adminer"
+      },
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "first_name",
+        "last_name",
+        "email",
+        "password"
+      ]
+    },
+    "CancelaTripRequest": {
+      "title": "CancelaTripRequest",
+      "example": {
+        "first_name": "Rita",
+        "last_name": "Achebe",
+        "email": "",
+        "password": "adminer"
+      },
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "first_name",
+        "last_name",
+        "email",
+        "password"
+      ]
+    },
+    "SignInRequest": {
+      "title": "SignInRequest",
+      "example": {
+        "email": "QExfu@QExfu.com",
+        "password": "testing@123"
+      },
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ]
+    }
+  },
+  "tags": [
+    {
+      "name": "Misc",
+      "description": ""
+    }
+  ]
+}
