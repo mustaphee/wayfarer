@@ -8,9 +8,6 @@ import { query } from '../db';
 
 class AuthController {
   async signUp(req, res) {
-    console.log('<<<<<<<============SIGN UP ENDPOINT========>>>>>>>>>');
-    console.log(req.body);
-    console.log(req.token);
     const data = req.body;
     const schema = Joi.object().keys({
       first_name: Joi.string().required().max(30),
@@ -48,10 +45,6 @@ class AuthController {
   }
 
   async signIn(req, res) {
-    console.log('<<<<<<<============SIGN IN ENDPOINT========>>>>>>>>>');
-    console.log(req.body);
-    console.log(req.token);
-    const data = req.body;
     const schema = Joi.object().keys({
       email: Joi.string().email().required().max(50),
       password: Joi.string().required(),
